@@ -2,25 +2,24 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { type Operation } from '@/types/operation'; // Vamos criar este tipo
+import { type Operation } from '@/types/operation';
 import OperationsTable from './OperationsTable';
 import ExportButton from './ExportButton';
 
 export default function DashboardClient() {
   const supabase = createClient();
-
-  // Estados para gerenciar os dados, filtros e carregamento
+  
   const [operations, setOperations] = useState<Operation[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Função para buscar dados, agora no cliente
   const fetchOperations = useCallback(async () => {
-    setLoading(true);
+    // Não seta o loading para true aqui para que a atualização seja mais suave
+    // setLoading(true);
 
     let query = supabase.from('operacoes').select(`
       id, created_at, transportadora, placa_veiculo, cliente, numero_nf, tipo, status
@@ -50,29 +49,28 @@ export default function DashboardClient() {
     } else {
       setOperations(data || []);
     }
-
+    
     setLoading(false);
   }, [search, status, startDate, endDate, supabase]);
 
-  // useEffect para chamar a busca de dados quando os filtros mudam
   useEffect(() => {
-    fetchOperations();
+    // Usamos um debounce para evitar buscas excessivas ao interagir com os filtros
+    const handler = setTimeout(() => {
+      fetchOperations();
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [fetchOperations]);
 
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-grow">
-          {/* O FilterBar agora gerencia o estado diretamente aqui */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <input
-                type="text"
-                placeholder="Buscar..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="p-2 border rounded-md"
-              />
+              <input type="text" placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-md" />
               <select value={status} onChange={(e) => setStatus(e.target.value)} className="p-2 border rounded-md">
                 <option value="all">Todos os Status</option>
                 <option value="Pendente">Pendente</option>
@@ -90,7 +88,12 @@ export default function DashboardClient() {
       </div>
 
       <div className="mt-6 bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-        {loading ? <p>Carregando...</p> : <OperationsTable operations={operations} />}
+        {loading ? <p>Carregando...</p> : (
+          <OperationsTable 
+            operations={operations} 
+            onStatusChange={fetchOperations} // <-- Passando a função como prop
+          />
+        )}
       </div>
     </>
   );
