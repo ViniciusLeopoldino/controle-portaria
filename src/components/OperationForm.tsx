@@ -1,9 +1,9 @@
-// src/components/OperationForm.tsx
-
 "use client";
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+// useRouter não é mais necessário aqui, podemos remover
+// import { useRouter } from 'next/navigation'; 
 
 interface OperationFormProps {
   type: 'Retirada' | 'Entrega';
@@ -11,6 +11,7 @@ interface OperationFormProps {
 }
 
 export default function OperationForm({ type, userId }: OperationFormProps) {
+  // const router = useRouter(); // Não precisamos mais do router
   const [transportadora, setTransportadora] = useState('');
   const [placa, setPlaca] = useState('');
   const [cliente, setCliente] = useState('');
@@ -33,7 +34,6 @@ export default function OperationForm({ type, userId }: OperationFormProps) {
       numero_nf: nf,
       tipo: type,
       user_id: userId,
-      // O status será 'Pendente' por padrão, conforme definido no banco de dados
     });
 
     setIsLoading(false);
@@ -42,11 +42,14 @@ export default function OperationForm({ type, userId }: OperationFormProps) {
       setMessage({ type: 'error', text: `Erro ao cadastrar: ${error.message}` });
     } else {
       setMessage({ type: 'success', text: `${type} cadastrada com sucesso!` });
-      // Limpa o formulário
+      
+      // Limpa o formulário para um novo lançamento
       setTransportadora('');
       setPlaca('');
       setCliente('');
       setNf('');
+
+      // A lógica de redirecionamento foi removida daqui.
     }
   };
 
@@ -67,19 +70,19 @@ export default function OperationForm({ type, userId }: OperationFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="transportadora" className="block text-sm font-medium text-gray-700">Transportadora</label>
-          <input type="text" id="transportadora" value={transportadora} onChange={(e) => setTransportadora(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <input type="text" id="transportadora" value={transportadora} onChange={(e) => setTransportadora(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-gray-700" />
         </div>
         <div>
           <label htmlFor="placa" className="block text-sm font-medium text-gray-700">Placa do Veículo</label>
-          <input type="text" id="placa" value={placa} onChange={(e) => setPlaca(e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <input type="text" id="placa" value={placa} onChange={(e) => setPlaca(e.target.value)} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-gray-700" />
         </div>
         <div>
           <label htmlFor="cliente" className="block text-sm font-medium text-gray-700">Cliente</label>
-          <input type="text" id="cliente" value={cliente} onChange={(e) => setCliente(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <input type="text" id="cliente" value={cliente} onChange={(e) => setCliente(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-gray-700" />
         </div>
         <div>
           <label htmlFor="nf" className="block text-sm font-medium text-gray-700">Número da NF</label>
-          <input type="text" id="nf" value={nf} onChange={(e) => setNf(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <input type="text" id="nf" value={nf} onChange={(e) => setNf(e.target.value)} required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-gray-700" />
         </div>
       </div>
 

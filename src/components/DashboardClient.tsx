@@ -17,9 +17,10 @@ export default function DashboardClient() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const [realtimeTrigger, setRealtimeTrigger] = useState(0);
+
   const fetchOperations = useCallback(async () => {
-    // Não seta o loading para true aqui para que a atualização seja mais suave
-    // setLoading(true);
+    setLoading(true);
 
     let query = supabase.from('operacoes').select(`
       id, created_at, transportadora, placa_veiculo, cliente, numero_nf, tipo, status
@@ -54,7 +55,6 @@ export default function DashboardClient() {
   }, [search, status, startDate, endDate, supabase]);
 
   useEffect(() => {
-    // Usamos um debounce para evitar buscas excessivas ao interagir com os filtros
     const handler = setTimeout(() => {
       fetchOperations();
     }, 300);
@@ -62,7 +62,24 @@ export default function DashboardClient() {
     return () => {
       clearTimeout(handler);
     };
-  }, [fetchOperations]);
+  }, [fetchOperations, realtimeTrigger]);
+
+  useEffect(() => {
+    const channel = supabase.channel('operacoes-realtime-channel-insert')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'operacoes' },
+        (payload) => {
+          console.log('Novo cadastro recebido em tempo real!', payload);
+          setRealtimeTrigger(prev => prev + 1);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <>
@@ -88,12 +105,12 @@ export default function DashboardClient() {
       </div>
 
       <div className="mt-6 bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-        {loading ? <p>Carregando...</p> : (
+        {loading ? <p>Carregando...</p> : 
           <OperationsTable 
             operations={operations} 
-            onStatusChange={fetchOperations} // <-- Passando a função como prop
+            onStatusChange={fetchOperations} 
           />
-        )}
+        }
       </div>
     </>
   );
