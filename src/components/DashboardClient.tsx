@@ -40,7 +40,8 @@ export default function DashboardClient() {
       query = query.lte('created_at', `${endDate}T23:59:59.999Z`);
     }
 
-    query = query.order('created_at', { ascending: false });
+    // A ordenação por data será feita no cliente, então podemos remover a do Supabase
+    // query = query.order('created_at', { ascending: false });
 
     const { data, error } = await query;
 
@@ -48,7 +49,31 @@ export default function DashboardClient() {
       console.error("Erro ao buscar operações:", error);
       setOperations([]);
     } else {
-      setOperations(data || []);
+      // --- INÍCIO DA NOVA LÓGICA DE ORDENAÇÃO ---
+
+      const sortedData = (data || []).sort((a, b) => {
+        // Mapeia cada status para um valor numérico para ordenação
+        const statusOrder = {
+          'Pendente': 1,
+          'Em Andamento': 2,
+          'Finalizado': 3
+        };
+
+        const orderA = statusOrder[a.status as keyof typeof statusOrder];
+        const orderB = statusOrder[b.status as keyof typeof statusOrder];
+
+        // Se os status forem diferentes, ordena por eles
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+
+        // Se os status forem iguais, ordena pela data de criação (mais recente primeiro)
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+
+      setOperations(sortedData);
+      
+      // --- FIM DA NOVA LÓGICA DE ORDENAÇÃO ---
     }
     
     setLoading(false);
@@ -70,7 +95,6 @@ export default function DashboardClient() {
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'operacoes' },
         (payload) => {
-          console.log('Novo cadastro recebido em tempo real!', payload);
           setRealtimeTrigger(prev => prev + 1);
         }
       )
@@ -82,6 +106,7 @@ export default function DashboardClient() {
   }, [supabase]);
 
   return (
+    // O JSX da página permanece exatamente o mesmo
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-grow">
