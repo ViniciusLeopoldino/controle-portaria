@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { NextResponse } from 'next/server';
 
 export default function LoginPage() {
   // Estados para os campos do formulário
@@ -40,10 +41,14 @@ export default function LoginPage() {
       router.push('/');
       router.refresh();
 
-    } catch (err) {
-      // Captura de erro genérico
-      setError('Ocorreu um erro inesperado. Tente novamente.');
-    }
+    } catch (error) {
+            // Verificamos se 'error' é uma instância de Error para acessar 'message' com segurança.
+            if (error instanceof Error) {
+              return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
+            }
+            // Caso contrário, retornamos uma mensagem de erro genérica.
+            return new NextResponse(JSON.stringify({ error: 'Ocorreu um erro desconhecido.' }), { status: 500 });
+          }
   };
 
   return (

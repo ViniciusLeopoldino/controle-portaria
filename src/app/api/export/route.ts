@@ -32,7 +32,12 @@ export async function GET(request: Request) {
 
     return NextResponse.json(data);
 
-  } catch (error: any) {
-    return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (error) {
+    // Verificamos se 'error' é uma instância de Error para acessar 'message' com segurança.
+    if (error instanceof Error) {
+      return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
+    }
+    // Caso contrário, retornamos uma mensagem de erro genérica.
+    return new NextResponse(JSON.stringify({ error: 'Ocorreu um erro desconhecido.' }), { status: 500 });
   }
 }

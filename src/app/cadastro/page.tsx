@@ -3,9 +3,10 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { NextResponse } from 'next/server';
 
 export default function SignupPage() {
   const [nome, setNome] = useState('');
@@ -15,7 +16,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const router = useRouter();
+  // const router = useRouter();
   const supabase = createClient();
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,9 +58,14 @@ export default function SignupPage() {
       setPassword('');
       setConfirmPassword('');
 
-    } catch (err) {
-      setError('Ocorreu um erro inesperado ao criar a conta.');
-    }
+     } catch (error) {
+        // Verificamos se 'error' é uma instância de Error para acessar 'message' com segurança.
+        if (error instanceof Error) {
+          return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
+        }
+        // Caso contrário, retornamos uma mensagem de erro genérica.
+        return new NextResponse(JSON.stringify({ error: 'Ocorreu um erro desconhecido.' }), { status: 500 });
+      }
   };
 
   return (

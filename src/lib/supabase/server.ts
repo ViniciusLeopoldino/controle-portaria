@@ -3,9 +3,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-// ADICIONADO 'async' aqui
+// O async/await que você adicionou está correto
 export const createSupabaseServerClient = async () => { 
-  // ADICIONADO 'await' aqui
   const cookieStore = await cookies()
 
   return createServerClient(
@@ -16,17 +15,20 @@ export const createSupabaseServerClient = async () => {
         get: (name: string) => {
           return cookieStore.get(name)?.value
         },
+        // Correção final aplicada aqui
         set: (name: string, value: string, options: CookieOptions) => {
           try {
             cookieStore.set({ name, value, ...options })
-          } catch (error) {
+          } catch { // A variável de erro foi completamente removida
             // Ignorar erros em contextos onde a modificação de cookies não é permitida
+            // (e.g., durante o rendering de Server Components)
           }
         },
+        // Correção final aplicada aqui
         remove: (name: string, options: CookieOptions) => {
           try {
             cookieStore.set({ name, value: '', ...options })
-          } catch (error) {
+          } catch { // A variável de erro foi completamente removida
             // Ignorar erros
           }
         },
