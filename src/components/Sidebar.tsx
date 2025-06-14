@@ -6,22 +6,21 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Home, ArrowRightLeft, PackagePlus, LayoutDashboard, LogOut, X } from 'lucide-react';
+import { Home, Warehouse, LayoutDashboard, LogOut, X } from 'lucide-react';
 
 const navLinks = [
   { name: 'Home', href: '/', icon: Home },
-  { name: 'Retirada', href: '/retirada', icon: PackagePlus },
-  { name: 'Entrega', href: '/entrega', icon: ArrowRightLeft },
+  { name: 'Portaria', href: '/portaria', icon: Warehouse }, // <-- Novo link unificado
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
 ];
 
 // Novas props para controlar o estado no mobile
 interface SidebarProps {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpenAction: (isOpen: boolean) => void;
 }
 
-export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export default function Sidebar({ isOpen, setIsOpenAction }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -36,7 +35,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     <>
       {/* Overlay que aparece atrás do menu no mobile */}
       <div
-        onClick={() => setIsOpen(false)}
+        onClick={() => setIsOpenAction(false)}
         className={`fixed inset-0 bg-black bg-opacity-50 z-10 transition-opacity md:hidden ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
@@ -49,7 +48,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-2xl font-bold text-[oklch(60%_0.118_184.704)]">Portaria Maglog</h2>
           {/* Botão de fechar que só aparece no mobile */}
-          <button onClick={() => setIsOpen(false)} className="md:hidden">
+          <button onClick={() => setIsOpenAction(false)} className="md:hidden">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -63,7 +62,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      onClick={() => setIsOpen(false)} // Fecha o menu ao clicar em um link
+                      onClick={() => setIsOpenAction(false)} // Fecha o menu ao clicar em um link
                       className={`flex items-center px-4 py-2 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md hover:bg-gray-200 ${
                         isActive ? 'bg-gray-200 font-semibold' : ''
                       }`}
