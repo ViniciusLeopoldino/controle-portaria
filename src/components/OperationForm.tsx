@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 // A prop 'type' foi removida da interface
 interface OperationFormProps {
@@ -10,7 +10,7 @@ interface OperationFormProps {
 }
 
 export default function OperationForm({ userId }: OperationFormProps) {
-  const router = useRouter();
+  // const router = useRouter();
 
   // --- MUDANÇA 1: Novo estado para controlar o tipo da operação ---
   const [operationType, setOperationType] = useState<'Retirada' | 'Entrega'>('Retirada');
