@@ -1,14 +1,13 @@
-// src/app/(app)/page.tsx
-
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import SummaryCard from '@/components/SummaryCard';
 import { Package, Truck } from 'lucide-react';
-import { startOfToday, endOfToday } from 'date-fns';
+import { startOfDay, endOfDay } from 'date-fns';
+// --- IMPORTAÇÃO CORRIGIDA COM OS NOMES CERTOS ---
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 
-// Revalidar os dados a cada 60 segundos
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-// Tipos para as contagens, para melhor organização
 type StatusCounts = {
   pendente: number;
   emAndamento: number;
@@ -23,23 +22,31 @@ type AllCounts = {
 export default async function HomePage() {
   const supabase = await createSupabaseServerClient();
   
-  // Define o período de hoje
-  const startOfDay = startOfToday();
-  const endOfDay = endOfToday();
+  const timeZone = 'America/Sao_Paulo';
+  
+  // --- LÓGICA CORRIGIDA COM AS FUNÇÕES CERTAS ---
+  // 1. Pega a data/hora atual (em UTC) e converte para o horário de São Paulo
+  const nowInSaoPaulo = toZonedTime(new Date(), timeZone);
+  
+  // 2. Calcula o início e o fim do dia com base na data já convertida
+  const startOfDayInSaoPaulo = startOfDay(nowInSaoPaulo);
+  const endOfDayInSaoPaulo = endOfDay(nowInSaoPaulo);
+  
+  // 3. Converte esses limites de volta para UTC para a consulta ao banco de dados
+  const startOfDayUTC = fromZonedTime(startOfDayInSaoPaulo, timeZone);
+  const endOfDayUTC = fromZonedTime(endOfDayInSaoPaulo, timeZone);
 
-  // Busca todas as operações do dia de hoje
+  // 4. A busca usa as datas em UTC, garantindo que a consulta seja sempre correta
   const { data: operacoesDoDia, error } = await supabase
     .from('operacoes')
     .select('tipo, status')
-    .gte('created_at', startOfDay.toISOString())
-    .lte('created_at', endOfDay.toISOString());
+    .gte('created_at', startOfDayUTC.toISOString())
+    .lte('created_at', endOfDayUTC.toISOString());
 
   if (error) {
     console.error("Erro ao buscar operações:", error);
-    // Você pode renderizar uma mensagem de erro aqui
   }
 
-  // Processa os dados para calcular as contagens
   const counts = (operacoesDoDia || []).reduce<AllCounts>(
     (acc, operacao) => {
       const { tipo, status } = operacao;
@@ -61,14 +68,11 @@ export default async function HomePage() {
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Resumo do Dia</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Card de Retiradas */}
         <SummaryCard
           title="Retiradas"
           icon={Package}
           counts={counts.retiradas}
         />
-
-        {/* Card de Entregas */}
         <SummaryCard
           title="Entregas"
           icon={Truck}
