@@ -90,7 +90,7 @@ export default function OperationForm({ type, userId }: OperationFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
+          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[oklch(60%_0.118_184.704)] hover:bg-[oklch(80%_0.118_184.704)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
         >
           {isLoading ? 'Cadastrando...' : `Cadastrar ${type}`}
         </button>

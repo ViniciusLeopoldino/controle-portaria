@@ -106,15 +106,15 @@ export default function DashboardClient() {
         <div className="flex-grow">
           <div className="bg-white p-4 rounded-lg shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <input type="text" placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-md" />
-              <select value={status} onChange={(e) => setStatus(e.target.value)} className="p-2 border rounded-md">
+              <input type="text" placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-md text-black" />
+              <select value={status} onChange={(e) => setStatus(e.target.value)} className="p-2 border rounded-md text-black">
                 <option value="all">Todos os Status</option>
                 <option value="Pendente">Pendente</option>
                 <option value="Em Andamento">Em Andamento</option>
                 <option value="Finalizado">Finalizado</option>
               </select>
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="p-2 border rounded-md" />
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="p-2 border rounded-md" />
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="p-2 border rounded-md text-black" />
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="p-2 border rounded-md text-black" />
             </div>
           </div>
         </div>

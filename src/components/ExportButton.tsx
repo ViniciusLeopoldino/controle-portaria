@@ -37,7 +37,7 @@ export default function ExportButton({ operations }: ExportButtonProps) {
   return (
     <button
       onClick={handleExport}
-      className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+      className="flex items-center px-4 py-2 bg-[oklch(60%_0.118_184.704)] text-white rounded-md hover:bg-[oklch(80%_0.118_184.704)]"
     >
       <Download className="w-4 h-4 mr-2" />
       Baixar Relatório

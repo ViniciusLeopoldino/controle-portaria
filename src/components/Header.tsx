@@ -15,7 +15,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       <button onClick={onMenuClick}>
         <Menu className="w-6 h-6" />
       </button>
-      <h1 className="ml-4 text-xl font-bold text-indigo-600">Portaria Maglog</h1>
+      <h1 className="ml-4 text-xl font-bold text-[oklch(60%_0.118_184.704)]">Portaria Maglog</h1>
     </header>
   );
 }

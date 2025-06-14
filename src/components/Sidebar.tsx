@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-2xl font-bold text-indigo-600">Portaria Maglog</h2>
+          <h2 className="text-2xl font-bold text-[oklch(60%_0.118_184.704)]">Portaria Maglog</h2>
           {/* Botão de fechar que só aparece no mobile */}
           <button onClick={() => setIsOpen(false)} className="md:hidden">
             <X className="w-6 h-6" />
