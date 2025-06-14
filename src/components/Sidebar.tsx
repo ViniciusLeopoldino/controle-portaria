@@ -1,5 +1,3 @@
-// src/components/Sidebar.tsx
-
 "use client";
 
 import Link from 'next/link';
@@ -10,17 +8,17 @@ import { Home, Warehouse, LayoutDashboard, LogOut, X } from 'lucide-react';
 
 const navLinks = [
   { name: 'Home', href: '/', icon: Home },
-  { name: 'Portaria', href: '/portaria', icon: Warehouse }, // <-- Novo link unificado
+  { name: 'Portaria', href: '/portaria', icon: Warehouse },
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
 ];
 
-// Novas props para controlar o estado no mobile
+// A interface de props que o erro acusa estar incorreta. Esta é a versão correta.
 interface SidebarProps {
   isOpen: boolean;
-  setIsOpenAction: (isOpen: boolean) => void;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-export default function Sidebar({ isOpen, setIsOpenAction }: SidebarProps) {
+export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -35,20 +33,20 @@ export default function Sidebar({ isOpen, setIsOpenAction }: SidebarProps) {
     <>
       {/* Overlay que aparece atrás do menu no mobile */}
       <div
-        onClick={() => setIsOpenAction(false)}
+        onClick={() => setIsOpen(false)}
         className={`fixed inset-0 bg-black bg-opacity-50 z-10 transition-opacity md:hidden ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       />
 
       <aside
-        className={`fixed top-0 left-0 w-64 h-full bg-white border-r z-20 flex-col transition-transform transform md:relative md:translate-x-0
+        className={`fixed top-0 left-0 w-64 h-full bg-white border-r z-20 flex flex-col transition-transform transform md:relative md:translate-x-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-2xl font-bold text-[oklch(60%_0.118_184.704)]">Portaria Maglog</h2>
           {/* Botão de fechar que só aparece no mobile */}
-          <button onClick={() => setIsOpenAction(false)} className="md:hidden">
+          <button onClick={() => setIsOpen(false)} className="md:hidden">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -62,7 +60,7 @@ export default function Sidebar({ isOpen, setIsOpenAction }: SidebarProps) {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      onClick={() => setIsOpenAction(false)} // Fecha o menu ao clicar em um link
+                      onClick={() => setIsOpen(false)} // Fecha o menu ao clicar em um link
                       className={`flex items-center px-4 py-2 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md hover:bg-gray-200 ${
                         isActive ? 'bg-gray-200 font-semibold' : ''
                       }`}
