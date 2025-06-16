@@ -1,2 +1,2 @@
-login: teste@teste.com
-senha: teste
+* login: teste@teste.com
+* senha: teste
