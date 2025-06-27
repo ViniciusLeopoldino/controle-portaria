@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { NextResponse } from 'next/server';
+import Link from 'next/link';
 
 export default function LoginPage() {
   // Estados para os campos do formulário
@@ -102,6 +103,17 @@ export default function LoginPage() {
             >
               Entrar
             </button>
+          </div>
+          <div>
+            <p className="text-sm text-center text-gray-600">
+              Não tem uma conta?{' '}
+              <Link
+                href="/cadastro"
+                className="font-medium text-[oklch(60%_0.118_184.704)] hover:text-[oklch(80%_0.118_184.704)]"
+              >
+                Registre-se
+              </Link>
+            </p>
           </div>
         </form>
       </div>

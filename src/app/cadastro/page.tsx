@@ -49,7 +49,7 @@ export default function SignupPage() {
       }
 
       setSuccessMessage(
-        'Conta criada com sucesso! Por favor, verifique seu email para ativar sua conta.'
+        'Conta criada com sucesso!'
       );
       
       // Limpa o formulário
@@ -96,7 +96,7 @@ export default function SignupPage() {
                 required
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className="block w-full px-3 py-2 mt-1 border rounded-md"
+                className="block w-full px-3 py-2 mt-1 border rounded-md text-black"
               />
             </div>
             <div>
@@ -112,7 +112,7 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-3 py-2 mt-1 border rounded-md"
+                className="block w-full px-3 py-2 mt-1 border rounded-md text-black"
               />
             </div>
             <div>
@@ -129,7 +129,7 @@ export default function SignupPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-3 py-2 mt-1 border rounded-md"
+                className="block w-full px-3 py-2 mt-1 border rounded-md text-black"
               />
             </div>
             <div>
@@ -145,7 +145,7 @@ export default function SignupPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block w-full px-3 py-2 mt-1 border rounded-md"
+                className="block w-full px-3 py-2 mt-1 border rounded-md text-black"
               />
             </div>
             {error && (
@@ -154,13 +154,13 @@ export default function SignupPage() {
             <div>
               <button
                 type="submit"
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-[oklch(60%_0.118_184.704)] border border-transparent rounded-md shadow-sm hover:bg-[oklch(80%_0.118_184.704)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cadastrar
               </button>
             </div>
-            <div className="text-sm text-center">
-              <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <div className="text-sm text-center text-gray-600">
+              <Link href="/login" className="font-medium text-[oklch(60%_0.118_184.704)] hover:text-[oklch(80%_0.118_184.704)]">
                 Já tem uma conta? Faça o login
               </Link>
             </div>
